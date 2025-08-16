@@ -20,3 +20,11 @@ Create a repository
 - Order of the routes matter a lot
 - Install Postman app and make a test API call
 - write a logic to handle GET , POST , PATCH , DELETE , API Calls and test them on postman
+
+- mMiltiple ROute handler
+- next()
+- next funtion and error along with res.send()
+- app.use("/route", rh1 , [rh2 , rh3], rh4)
+- how request js basically  handles requests bihind the scene
+- diff between app.use and app.all
+- wrtie a dummy auth middleware for all the user routes except user/login

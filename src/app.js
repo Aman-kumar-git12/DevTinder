@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 
+
 // app.get("/user", (req, res) => {
 //     console.log(req.query); // logs: { name: 'Aman', age: '20' }
 //     res.send({ firstname: "Aman", lastname: "Kumar" });
@@ -100,6 +101,70 @@ const app = express();
 // app.get ("/route" , [rh , rh2 , rh3 ], rh4 , rh5 ) // correct
 // app.get ("/route" , [rh] , [rh2] , [rh3] , rh4 , rh5 ) // correct
 // app.get ("/route" , rh , [rh2 , rh3 , rh4] , rh5 ) // correct
+
+
+// // another mehtod of using next 
+// // independently use function 
+// app.get("/user", (req, res, next)=>{
+//     console.log(req.query); // logs: { name: 'Aman', age: '20' }
+//     next(); // calling the next middleware function
+
+// })
+// app.get("/user", (req, res)=>{
+//     res.send("Response 2"); // Sending a JSON response to the client
+// }) 
+
+
+
+// app.get("/user", (req, res, next)=>{
+//     console.log(req.query); // logs: { name: 'Aman', age: '20' }
+//     next(); // calling the next middleware function
+
+// })
+// app.get("/user", (req, res, next)=>{
+//     next()
+// }) // this will show error because next is not defined in this scope, Cannot GET /user
+
+
+
+
+// // handling single route 
+// app.get("/admin",(req, res)=>{
+//     const token = "xyafdfhadsf";
+//     const isAuthorised =  token=== "xyz";
+//     if (isAuthorised){
+//         res.send("I am Authorised")
+
+//     }else{
+//         res.status(401).send("I am still Unauthorised")
+//     }
+// }) 
+
+
+// handing numtiple routes
+// Handle Auth request for all request GET , POST , DELETE, PATHCH;
+const {adminAuth, userAuth} = require('./middlewares/auth')
+
+app.use('/admin', adminAuth ,(req, res) => {
+  res.send("Admin: Data sent")});
+
+
+app.get("/user", userAuth, (req, res) => {
+  res.send("User: Data sent");
+});
+
+
+ 
+// app.get("/admin/saved", (req, res,)=>{
+//     res.send("Data is saved")
+// })
+// app.get("/admin/getdeletedApp", (req, res,)=>{
+//     res.send("App get deleted")
+// })
+
+
+
+
 
 
 
