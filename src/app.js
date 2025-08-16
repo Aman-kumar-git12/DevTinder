@@ -2,169 +2,33 @@ const express = require("express");
 const app = express();
 
 
-// app.get("/user", (req, res) => {
-//     console.log(req.query); // logs: { name: 'Aman', age: '20' }
-//     res.send({ firstname: "Aman", lastname: "Kumar" });
+
+// // with try catch 
+// app.get("/getUserId", (req, res, next) => {
+//   console.log("getUserId is running...");
+//   try {
+//     // Simulating an error
+//     throw new Error("Simulated error");
+//     res.send("User data sent");
+//   } catch (error) {
+//     res.send("Error from catch"); // Pass the error to the next middleware
+//   }
 // });
 
-// app.post('/user', (req,res)=>{
-//     console.log("save to the database")
-//     res.send("data successfully saved to the database") // Sending a JSON response to the client
-// })
-
-// app.delete('/user', (req,res)=>{
-//     res.send("data successfully deleted from the database") // Sending a JSON response to the client
-// })
-
-// // this will match all the https method API calls to test
-// app.use("/",(req, res)=>{
-//     res.send(" Hello form Server - i am changed") // Sending a response to the client
-// })
-
-// app.get("/user", (req, res) => {
-//   console.log(req.query); // logs: { name: 'Aman', age: '20' }
-// }); // request will run infinitely,
-
-// app.get(
-//   "/user",
-//   (req, res) => {
-//     console.log(req.query); // logs: { name: 'Aman', age: '20' }
-//     res.send("Response 1");
-//   },
-//   (req, res) => {
-//     res.send("Response 2");
-//   }
-// ); // only first will return the response , because js is single threaded
 
 
-
-
-// app.get(
-//   "/user",
-//   (req, res, next) => {
-//     console.log(req.query); // logs: { name: 'Aman', age: '20' }
-//     //   res.send("Response 1");
-//     next()
-//   },
-//   (req, res) => {
-//     console.log("This is the second middleware function");
-//     res.send("Response 2");
-//   }
-// ); // 2ND RESPONSE
-
-// app.get(
-//   "/user",
-//   (req, res, next) => {
-//     console.log(req.query); // logs: { name: 'Aman', age: '20' }
-//       res.send("Response 1");
-//     next()
-//   },
-//   (req, res) => {
-//     console.log("This is the second middleware function");
-//     res.send("Response 2");
-//   }
-// ); // it will show error because response is already sent in the first middleware function, Cannot set headers after they are sent to the client
-
-
-// app.get(
-//   "/user",
-//   (req, res, next) => {
-//     console.log(req.query); // logs: { name: 'Aman', age: '20' }
-//     next()
-//       res.send("Response 1");
-//   },
-//   (req, res) => {
-//     console.log("This is the second middleware function");
-//     res.send("Response 2");
-//   }
-// ); // this time 2nd response will sent first and while first response send it will show error
-
-
-
-// we can wrap in the array
-
-// app.get(
-//   "/user",
-//   [(req, res, next) => {
-//     console.log(req.query); // logs: { name: 'Aman', age: '20' }
-//     next()
-//       res.send("Response 1");
-//   },
-//   (req, res) => {
-//     console.log("This is the second middleware function");
-//     res.send("Response 2");
-//   }]
-// ); // this time 2nd response will sent first and while first response send it will show error
-
-// app.get ("/route" , rh , rh2 , rh3 , rh4 , rh5 ) // correct
-// app.get ("/route" , [rh , rh2 , rh3 , rh4 , rh5] ) // correct
-// app.get ("/route" , [rh , rh2 , rh3 ], rh4 , rh5 ) // correct
-// app.get ("/route" , [rh] , [rh2] , [rh3] , rh4 , rh5 ) // correct
-// app.get ("/route" , rh , [rh2 , rh3 , rh4] , rh5 ) // correct
-
-
-// // another mehtod of using next 
-// // independently use function 
-// app.get("/user", (req, res, next)=>{
-//     console.log(req.query); // logs: { name: 'Aman', age: '20' }
-//     next(); // calling the next middleware function
-
-// })
-// app.get("/user", (req, res)=>{
-//     res.send("Response 2"); // Sending a JSON response to the client
-// }) 
-
-
-
-// app.get("/user", (req, res, next)=>{
-//     console.log(req.query); // logs: { name: 'Aman', age: '20' }
-//     next(); // calling the next middleware function
-
-// })
-// app.get("/user", (req, res, next)=>{
-//     next()
-// }) // this will show error because next is not defined in this scope, Cannot GET /user
-
-
-
-
-// // handling single route 
-// app.get("/admin",(req, res)=>{
-//     const token = "xyafdfhadsf";
-//     const isAuthorised =  token=== "xyz";
-//     if (isAuthorised){
-//         res.send("I am Authorised")
-
-//     }else{
-//         res.status(401).send("I am still Unauthorised")
-//     }
-// }) 
-
-
-// handing numtiple routes
-// Handle Auth request for all request GET , POST , DELETE, PATHCH;
-const {adminAuth, userAuth} = require('./middlewares/auth')
-
-app.use('/admin', adminAuth ,(req, res) => {
-  res.send("Admin: Data sent")});
-
-
-app.get("/user", userAuth, (req, res) => {
-  res.send("User: Data sent");
+// handling error in our code
+app.get("/getUserId", (req, res, next) => {
+  console.log("getUserId is running...");
+  // Simulating an error
+  throw new Error("Simulated error");
+  res.send("User data sent");
 });
-
-
- 
-// app.get("/admin/saved", (req, res,)=>{
-//     res.send("Data is saved")
-// })
-// app.get("/admin/getdeletedApp", (req, res,)=>{
-//     res.send("App get deleted")
-// })
-
-
-
-
+app.use("/", (err, req, res, next) => {
+  if (err) {
+    res.status(401).send("data is unauthorised");
+  }
+});
 
 
 
