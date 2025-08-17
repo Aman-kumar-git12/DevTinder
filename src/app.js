@@ -4,69 +4,25 @@ const app = express();
 const { connectDB } = require("./config/database.js");
 const User = require("./models/user.js"); // this user is the model that we created in models/user.js
 
-app.post("/signup/single", async (req, res) => {
-  // creating a new instance of the User model
-  // simply we create a obj used as data to be saved in the database
-  // and then pass in the instance of the User model
-  // and then call the save method to save the data in the database
 
-  //   for sending one user data
-  const user = new User({
-    firstName: "Aman",
-    lastName: "Kumar",
-    email: "aman@gmail.com",
-    age: 20,
-    password: "aman@123",
-  });
+// Whenever a request comes in with a JSON body, automatically read it, parse it into a JavaScript object, and put it inside req.body.
+app.use(express.json()); // Middleware to parse JSON bodies goven by express
 
-  // saving the user instance to the database
-  // this will return a promise, so we can use async/await or .then()
-  try {
-    await user.save(); // this will save to the database inside the users collection inside the devTinder database
-    res.send("Single User created successfully");
-  } catch (err) {
-    res.status(400).send("Error in creating user");
+
+app.post("/signup", async (req, res) => {
+  const newData = req.body
+  try{
+    const user = new User(newData)
+    console.log("User data is", user)
+    await user.save()
+    res.status(201).send("Dynamic User created successfully");
   }
-});
-
-
-
-
-// for sending multiple users data
-app.post("/signup/multiple", async (req, res) => {
-  try {
-    await User.insertMany([
-      {
-        firstName: "Aman",
-        lastName: "Kumar",
-        email: "aman@gmail.com",
-        age: 20,
-        password: "aman@123",
-      },
-      {
-        firstName: "Mohit",
-        lastName: "Singh",
-        email: "mohit@123@gmail.com",
-        age: 19,
-        password: "mohit@123",
-      },
-      {
-        firstName: "virat",
-        lastName: "Kohli",
-        email: "virat@gmail.com",
-        age: 35,
-        password: "virat@123",
-      },
-    ]);
-    res.send("Multiple Users created successfully" )
-
-  } catch (err) {
-    res.status(400).send("Error in creating users");
+  catch(err){
+    console.log("Error in crating dynamic user")
+    res.status(400).send("Error in creating dynamic user")
   }
+
 });
-
-
-
 
 
 // resolving the database pormise to connect to the database

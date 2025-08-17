@@ -36,3 +36,7 @@ Create a repository
 - create POST signup to add the dat in database
 - push some documents using api calls from postman
 - Error handling using try/catch
+
+- difference between json obj and javascript obj
+- add the express json midddleware to your app
+- Make your signup api dynamic to recieve data from postman
