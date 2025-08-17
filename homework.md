@@ -28,3 +28,8 @@ Create a repository
 - how request js basically  handles requests bihind the scene
 - diff between app.use and app.all
 - wrtie a dummy auth middleware for all the user routes except user/login
+
+- create free cluster on MongoDB official website (Mongo Atlas)
+- Connection your application to the database/devTinder
+- call the connectDB function before strting application on 7777
+- create UserSchema and UserModel
