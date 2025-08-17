@@ -42,3 +42,9 @@ Create a repository
 - Make your signup api dynamic to recieve data from postman
 - Api - get user by email
 - API - get /feed all the data of database
+- API - get user by findById
+- Differene between Put and Patch
+- API - Update the user
+- Explore the documeantion
+- What are the option in a Model.findOneAndUpdate method , explore more about it
+- API - update the user with email id

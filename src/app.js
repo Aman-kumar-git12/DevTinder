@@ -8,34 +8,38 @@ const User = require("./models/user.js"); // this user is the model that we crea
 app.use(express.json()); // Middleware to parse JSON bodies goven by express
 
 
-// get first single data user by email - findOne 
-// get multiple data users by email - find
-app.get("/user", async (req, res) => {
-  try {
-    const emailID = req.body.email;
-    const user = await User.findOne({ email: emailID });
-    if (!user) {
-      res.status(404).send("User not found");
-    } else {
-      res.send(user);
-      console.log("User found:", user);
-    }
-  } catch (err) {
-    res.status(500).send("Something went wrong");
-  }
-});
 
-
-// // Feed API - GET /feed  - get all the users from the database
-app.get("/feed", async (req, res) => {
+// delete the data of user
+app.delete('/delete', async(req, res)=>{
   try{
-    const user = await User.find({})
-    console.log("Users found")
+    const delEmail = req.body._id
+    const user = await User.findByIdAndDelete(delEmail); // user have only first user that matches the email
+    if(!user){
+      return res.status(404).send("User not found");
+    }
+
     res.send(user)
+
   }catch(err){
     res.status(500).send("Something went wrong")
   }
-});
+})
+
+
+
+// Update the dat of user 
+app.patch('/update', async(req, res)=>{
+  const UserId = req.body._id
+  data = req.body
+  try {
+    await User.findByIdAndUpdate(UserId, data)
+    res.send("User updated successfully");
+
+
+  }catch(err){
+    res.status(500).send("Something went wrong")
+  }
+})
 
 
 

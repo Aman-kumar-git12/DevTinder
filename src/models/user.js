@@ -15,8 +15,10 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-  },
-});
+  }},
+  // This will make sure that only the fields defined in the schema are allowed
+  // strict:false means that it will allow additional fields that are not defined in the schema
+ {"strict": false });
 
 
 module.exports = mongoose.model("User" , userSchema);
