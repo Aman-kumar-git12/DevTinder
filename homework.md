@@ -33,3 +33,6 @@ Create a repository
 - Connection your application to the database/devTinder
 - call the connectDB function before strting application on 7777
 - create UserSchema and UserModel
+- create POST signup to add the dat in database
+- push some documents using api calls from postman
+- Error handling using try/catch
