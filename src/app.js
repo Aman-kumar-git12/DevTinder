@@ -4,25 +4,40 @@ const app = express();
 const { connectDB } = require("./config/database.js");
 const User = require("./models/user.js"); // this user is the model that we created in models/user.js
 
-
 // Whenever a request comes in with a JSON body, automatically read it, parse it into a JavaScript object, and put it inside req.body.
 app.use(express.json()); // Middleware to parse JSON bodies goven by express
 
 
-app.post("/signup", async (req, res) => {
-  const newData = req.body
-  try{
-    const user = new User(newData)
-    console.log("User data is", user)
-    await user.save()
-    res.status(201).send("Dynamic User created successfully");
+// get first single data user by email - findOne 
+// get multiple data users by email - find
+app.get("/user", async (req, res) => {
+  try {
+    const emailID = req.body.email;
+    const user = await User.findOne({ email: emailID });
+    if (!user) {
+      res.status(404).send("User not found");
+    } else {
+      res.send(user);
+      console.log("User found:", user);
+    }
+  } catch (err) {
+    res.status(500).send("Something went wrong");
   }
-  catch(err){
-    console.log("Error in crating dynamic user")
-    res.status(400).send("Error in creating dynamic user")
-  }
-
 });
+
+
+// // Feed API - GET /feed  - get all the users from the database
+app.get("/feed", async (req, res) => {
+  try{
+    const user = await User.find({})
+    console.log("Users found")
+    res.send(user)
+  }catch(err){
+    res.status(500).send("Something went wrong")
+  }
+});
+
+
 
 
 // resolving the database pormise to connect to the database

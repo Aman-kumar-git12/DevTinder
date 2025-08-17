@@ -40,3 +40,5 @@ Create a repository
 - difference between json obj and javascript obj
 - add the express json midddleware to your app
 - Make your signup api dynamic to recieve data from postman
+- Api - get user by email
+- API - get /feed all the data of database
