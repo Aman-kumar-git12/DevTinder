@@ -24,9 +24,6 @@ app.get("/user", async (req, res) => {
   }
 });
 
-
-
-
 // we are taking data from client
 app.post("/signup/single", async (req, res) => {
   const userData = req.body; // this will give us the data that we sent from the client
@@ -59,15 +56,30 @@ app.delete("/delete", async (req, res) => {
 // Update the dat of user
 app.patch("/update", async (req, res) => {
   const UserId = req.body._id;
-  data = req.body;
+  data = { ...req.body };
+  delete data._id;
+
   try {
+    const ALLOWED_UPDATES = ["firstName", "password", "photoURL"];
+    const isAllowed = Object.keys(data).every((k) =>
+      ALLOWED_UPDATES.includes(k)
+    );
+
+    if (!isAllowed) {
+      throw new Error("Invalid update ");
+    }
+
+    if (data.firstName && data.firstName.trim().length > 10) {
+      throw new Error("firstName should be less than 10 char");
+    }
+
     await User.findByIdAndUpdate(UserId, data, {
-      returnDocument:"after",// returnDocument: "after" will return the updated document
-      runValidators: true //runValidators: true will run the validators that we have set in the schema
-    }); 
+      // returnDocument: "after", // returnDocument: "after" will return the updated document
+      // runValidators: true, //runValidators: true will run the validators that we have set in the schema
+    });
     res.send("User updated successfully");
   } catch (err) {
-    res.status(500).send("Something went wrong");
+    res.status(500).send(err.message);
   }
 });
 

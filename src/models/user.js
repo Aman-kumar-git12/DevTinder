@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
       type: String, // the type of the field is string
       required: true, //this field is required
       minlength: 4, //this field must be atleast 4 characters long
-      maxlength: 5, //this field must be atmost 5 characters long
+      // maxlength: 5, //this field must be atmost 5 characters long
     },
     lastName: {
       type: String,

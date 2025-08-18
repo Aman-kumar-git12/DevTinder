@@ -48,3 +48,4 @@ Create a repository
 - Explore the documeantion
 - What are the option in a Model.findOneAndUpdate method , explore more about it
 - API - update the user with email id
+- API level validation for each field
