@@ -31,10 +31,11 @@ app.post("/signup/single", async (req, res) => {
   console.log(userData);
   try {
     await user.save(); // this will save to the database inside the users collection inside the devTinder database
+    console.log(userData)
     res.send("Single User created successfully");
   } catch (err) {
     console.error(err);
-    res.status(400).send("Error in creating user");
+    res.status(400).send("Error in creating user" , err.message);
   }
 });
 

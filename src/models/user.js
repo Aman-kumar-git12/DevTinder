@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const validator = require("validator");
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -11,12 +11,20 @@ const userSchema = new mongoose.Schema(
     lastName: {
       type: String,
     },
+
+
     email: {
       type: String,
       required: true,
       unique: true, // this field must be unique, no two users can have the same email
       trim: true, //this removes any whitespaces from beginnning and the end of the string
+      validate(value){
+        if(!validator.isEmail(value)){
+          throw new Error("Invalid Email address")
+        }
+      }
     },
+
     gender: {
       type: String,
       validate(value) {

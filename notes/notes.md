@@ -7,6 +7,7 @@ name: {
   trim: true,                 // removes leading/trailing spaces
   lowercase: true,            // always stored as lowercase
   uppercase: true,            // always stored as uppercase
+  enum: ["guest", "admin", "user"], // fixed set of allowed values
   match: [/^[A-Za-z ]+$/, "Only letters allowed"], // regex validation
   enum: ["male", "female", "other"], // fixed set of values
   default: "Guest"            // default value
@@ -20,6 +21,7 @@ age: {
   required: true,
   min: 18,                    // must be at least 18
   max: 60,                    // must be at most 60
+  enum: [18, 20, 22, 24, 26, 28, 30] // allowed values (optional)
   default: 18,
   validate(value) {           // custom validation
     if (value % 2 !== 0) throw new Error("Age must be even");
