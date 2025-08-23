@@ -5,10 +5,12 @@ const { connectDB } = require("./config/database.js");
 const User = require("./models/user.js"); // this user is the model that we created in models/user.js
 const { ValidateSignUpData } = require("./utils/validation");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser"); // read cookie
+const jwt = require("jsonwebtoken");
 
 // Whenever a request comes in with a JSON body, automatically read it, parse it into a JavaScript object, and put it inside req.body.
 app.use(express.json()); // Middleware to parse JSON bodies goven by express
-
+app.use(cookieParser()); // middlewqre that read the cookie
 // get first single data user by email - findOne
 // get multiple data users by email - find
 app.get("/user", async (req, res) => {
@@ -25,6 +27,28 @@ app.get("/user", async (req, res) => {
     res.status(500).send("Something went wrong");
   }
 });
+
+app.get("/profile", async (req, res) => {
+  try {
+    const cookie = req.cookies;        // (1) Read cookies sent by client
+    const { token } = cookie;          // (2) Extract the token from cookies
+
+    if (!token) {
+      throw new Error("Invalid cookie"); // If no token → reject request
+    }
+
+    // (3) Validate the token here
+    const decodedMessage = await jwt.verify(token, "DEV@tinder$780");
+
+    const { _id } = decodedMessage;    // (4) Extract userId from token payload
+    console.log("UserId is : ", _id);
+
+    res.send("reading cookie");        // (5) Success → request continues
+  } catch (err) {
+    res.status(401).send("Error:", err.message); // Invalid → reject
+  }
+});
+
 
 // we are taking data from client
 app.post("/signup/single", async (req, res) => {
@@ -61,20 +85,37 @@ app.post("/signup/single", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   try {
-    // extract the emailId and password from database
+    // 1. Extract email and password from client request body
     const { email, password } = req.body;
+
+    // 2. Check if user exists in database by email
     const user = await User.findOne({ email: email });
     if (!user) {
-      throw new Error("Invalid credential"); // attackers will not know wheather the email is wrong or password is wrong
-      // throw new Error("Email is not found in database")
+      // If user not found, throw generic error (do not reveal if email is wrong)
+      throw new Error("Invalid credential"); 
+      // Alternative (not recommended for security): throw new Error("Email is not found in database")
     }
+
+    // 3. Compare given password with hashed password stored in DB
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
+
+    if (isPasswordValid) {
+      // 4. If password is correct, create a JWT token with user _id as payload
+      const token = await jwt.sign({ _id: user._id }, "DEV@tinder$780");
+      console.log(token); // Debugging: log the token in server console
+
+      // 5. Store token in cookie and send it back to client
+      res.cookie("token", token);
+
+      // 6. Send success response
+      res.send("Login Successful!!!");
+    } else {
+      // If password is invalid, throw generic error
       throw new Error("Invalid credential");
-      // throw new Error("Password is not valid")
+      // Alternative (not recommended for security): throw new Error("Password is not valid")
     }
-    res.send("Login Successful!!!");
   } catch (err) {
+    // 7. If any error occurs, send 401 Unauthorized with error details
     res.status(401).json({
       message: "Error : Login not successful ",
       error: err.message,
@@ -82,6 +123,7 @@ app.post("/login", async (req, res) => {
     });
   }
 });
+
 
 // delete the data of user
 app.delete("/delete", async (req, res) => {
