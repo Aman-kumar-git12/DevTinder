@@ -59,6 +59,30 @@ app.post("/signup/single", async (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  try {
+    // extract the emailId and password from database
+    const { email, password } = req.body;
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      throw new Error("Invalid credential"); // attackers will not know wheather the email is wrong or password is wrong
+      // throw new Error("Email is not found in database")
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error("Invalid credential");
+      // throw new Error("Password is not valid")
+    }
+    res.send("Login Successful!!!");
+  } catch (err) {
+    res.status(401).json({
+      message: "Error : Login not successful ",
+      error: err.message,
+      stack: err.stack,
+    });
+  }
+});
+
 // delete the data of user
 app.delete("/delete", async (req, res) => {
   try {

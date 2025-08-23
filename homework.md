@@ -53,3 +53,7 @@ Create a repository
 - Validate data for the signup API
 - install package
 - create passwordHash using bcrypt.hash and save the user encrypted password
+
+
+- create login api and write the logic by your own
+- compare password and throw error if email or password is invalid
