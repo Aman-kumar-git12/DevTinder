@@ -3,6 +3,8 @@ const app = express();
 
 const { connectDB } = require("./config/database.js");
 const User = require("./models/user.js"); // this user is the model that we created in models/user.js
+const { ValidateSignUpData } = require("./utils/validation");
+const bcrypt = require("bcrypt");
 
 // Whenever a request comes in with a JSON body, automatically read it, parse it into a JavaScript object, and put it inside req.body.
 app.use(express.json()); // Middleware to parse JSON bodies goven by express
@@ -26,16 +28,34 @@ app.get("/user", async (req, res) => {
 
 // we are taking data from client
 app.post("/signup/single", async (req, res) => {
-  const userData = req.body; // this will give us the data that we sent from the client
-  const user = new User(userData);
-  console.log(userData);
   try {
+    // validation of data
+    ValidateSignUpData(req);
+    // encrypt your password
+    const { firstName, lastName, email, password } = req.body;
+    const passwordHash = await bcrypt.hash(password, 10);
+    console.log(passwordHash);
+
+    // creating new instance
+
+    const user = new User({
+      // this will give us the data that we sent from the client
+      firstName,
+      lastName,
+      email,
+      password: passwordHash,
+    });
+
     await user.save(); // this will save to the database inside the users collection inside the devTinder database
-    console.log(userData)
+    // console.log(userData)
     res.send("Single User created successfully");
   } catch (err) {
-    console.error(err);
-    res.status(400).send("Error in creating user" , err.message);
+    // console.error(err);
+    res.status(400).json({
+      message: "Error in creating user",
+      error: err.message, // send readable error
+      stack: err.stack, // optional: helpful in debugging
+    });
   }
 });
 

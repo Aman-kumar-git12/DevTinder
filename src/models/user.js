@@ -37,7 +37,6 @@ const userSchema = new mongoose.Schema(
     },
     age: {
       type: Number,
-      required: true,
       min: 18, //this field must be atleast 18 years old
       max: 60, //this field must be atmost 60 years old
     },

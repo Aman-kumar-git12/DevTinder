@@ -49,3 +49,7 @@ Create a repository
 - What are the option in a Model.findOneAndUpdate method , explore more about it
 - API - update the user with email id
 - API level validation for each field
+
+- Validate data for the signup API
+- install package
+- create passwordHash using bcrypt.hash and save the user encrypted password
