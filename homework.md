@@ -66,3 +66,5 @@ Create a repository
 
 - write user auth middleware in profile api and a new send connectionRequest API
 - set the expiry jwt token and cookies to 7 days
+
+- create userSchema method to comparePassword(password)

@@ -87,19 +87,17 @@ app.post("/login", async (req, res) => {
     }
 
     // 3. Compare given password with hashed password stored in DB
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await user.validatePassword(password)
 
     if (isPasswordValid) {
       // 4. If password is correct, create a JWT token with user _id as payload
-      // When creating token
-      const token = jwt.sign({ _id: user._id },"DEV@tinder$790",{ expiresIn: "1d" } // valid for 1 day
-       );
-      console.log(token); // Debugging: log the token in server console
+      const token = await user.getJWT();
+      // console.log(token); // Debugging: log the token in server console
 
       // 5. Store token in cookie and send it back to client
 
-      res.cookie("token", token , {
-        expires: new Date(Date.now() + 8 * 3600000)
+      res.cookie("token", token, {
+        expires: new Date(Date.now() + 8 * 3600000),
       });
 
       // 6. Send success response
@@ -111,7 +109,7 @@ app.post("/login", async (req, res) => {
     }
   } catch (err) {
     // 7. If any error occurs, send 401 Unauthorized with error details
-    res.status(401).json({
+    res.status(400).json({
       message: "Error : Login not successful ",
       error: err.message,
       stack: err.stack,
