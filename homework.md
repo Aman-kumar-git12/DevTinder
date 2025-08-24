@@ -68,3 +68,11 @@ Create a repository
 - set the expiry jwt token and cookies to 7 days
 
 - create userSchema method to comparePassword(password)
+
+- explore tinder api
+- reate a list all api you can think of in devTinder
+- froup multiple routes under respective router
+
+- explore or read documentation of express router
+- create routes folder for managing auth, profile, request router
+- import these router in app.js
