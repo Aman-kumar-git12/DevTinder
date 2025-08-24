@@ -7,10 +7,12 @@ const { ValidateSignUpData } = require("./utils/validation");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser"); // read cookie
 const jwt = require("jsonwebtoken");
+const { userAuth } = require("./middlewares/auth");
 
 // Whenever a request comes in with a JSON body, automatically read it, parse it into a JavaScript object, and put it inside req.body.
 app.use(express.json()); // Middleware to parse JSON bodies goven by express
 app.use(cookieParser()); // middlewqre that read the cookie
+
 // get first single data user by email - findOne
 // get multiple data users by email - find
 app.get("/user", async (req, res) => {
@@ -28,27 +30,15 @@ app.get("/user", async (req, res) => {
   }
 });
 
-app.get("/profile", async (req, res) => {
+app.get("/profile", userAuth, async (req, res) => {
   try {
-    const cookie = req.cookies;        // (1) Read cookies sent by client
-    const { token } = cookie;          // (2) Extract the token from cookies
-
-    if (!token) {
-      throw new Error("Invalid cookie"); // If no token → reject request
-    }
-
-    // (3) Validate the token here
-    const decodedMessage = await jwt.verify(token, "DEV@tinder$780");
-
-    const { _id } = decodedMessage;    // (4) Extract userId from token payload
-    console.log("UserId is : ", _id);
-
-    res.send("reading cookie");        // (5) Success → request continues
+    const user = req.user;
+    console.log(user);
+    res.send(user); // (5) Success → request continues
   } catch (err) {
     res.status(401).send("Error:", err.message); // Invalid → reject
   }
 });
-
 
 // we are taking data from client
 app.post("/signup/single", async (req, res) => {
@@ -92,7 +82,7 @@ app.post("/login", async (req, res) => {
     const user = await User.findOne({ email: email });
     if (!user) {
       // If user not found, throw generic error (do not reveal if email is wrong)
-      throw new Error("Invalid credential"); 
+      throw new Error("Invalid credential");
       // Alternative (not recommended for security): throw new Error("Email is not found in database")
     }
 
@@ -101,11 +91,16 @@ app.post("/login", async (req, res) => {
 
     if (isPasswordValid) {
       // 4. If password is correct, create a JWT token with user _id as payload
-      const token = await jwt.sign({ _id: user._id }, "DEV@tinder$780");
+      // When creating token
+      const token = jwt.sign({ _id: user._id },"DEV@tinder$790",{ expiresIn: "1d" } // valid for 1 day
+       );
       console.log(token); // Debugging: log the token in server console
 
       // 5. Store token in cookie and send it back to client
-      res.cookie("token", token);
+
+      res.cookie("token", token , {
+        expires: new Date(Date.now() + 8 * 3600000)
+      });
 
       // 6. Send success response
       res.send("Login Successful!!!");
@@ -124,6 +119,14 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.post("/sendConnectionRequest", userAuth, async (req, res) => {
+  try {
+    console.log("Sending Connection Request");
+    res.send("Connection Request Sent");
+  } catch (err) {
+    res.status(400).send("Error: " + err.message);
+  }
+});
 
 // delete the data of user
 app.delete("/delete", async (req, res) => {

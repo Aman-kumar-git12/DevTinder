@@ -63,3 +63,6 @@ Create a repository
 - create get profile and save and check if you get the cookie back
 - in login api,after email adn jwt validation create jwt token and send it to the user in cookie
 -read the cookie inside your profile api and find the logged in user
+
+- write user auth middleware in profile api and a new send connectionRequest API
+- set the expiry jwt token and cookies to 7 days
