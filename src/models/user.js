@@ -51,15 +51,17 @@ const userSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // timestamps: true will add createdAt and updatedAt fields to the document
-    versionKey: false, // versionKey: false will remove the __v field from the document only when we create the document
+    // timestamps: true, // timestamps: true will add createdAt and updatedAt fields to the document
+    // versionKey: false, // versionKey: false will remove the __v field from the document only when we create the document
   }
 );
 
 userSchema.methods.getJWT = async function(){
   const user = this
   const token = await  jwt.sign({_id : user._id} , "DEV@tinder$790" ,{expiresIn: "7d"})
+  console.log(token)
   return token 
+
 }
 userSchema.methods.validatePassword = async function(passwordInputByUser){
   const user = this

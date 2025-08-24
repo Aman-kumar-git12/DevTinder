@@ -9,7 +9,7 @@ authRouter.post("/signup/single", async (req, res) => {
     // validation of data
     ValidateSignUpData(req);
     // encrypt your password
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, gender , age , password } = req.body;
     const passwordHash = await bcrypt.hash(password, 10);
     console.log(passwordHash);
 
@@ -20,7 +20,10 @@ authRouter.post("/signup/single", async (req, res) => {
       firstName,
       lastName,
       email,
+      gender,
+      age,
       password: passwordHash,
+
     });
 
     await user.save(); // this will save to the database inside the users collection inside the devTinder database
@@ -77,6 +80,19 @@ authRouter.post("/login", async (req, res) => {
       error: err.message,
       stack: err.stack,
     });
+  }
+});
+
+
+// it's not reuqire to write in try/catch
+authRouter.post("/logout", async (req, res) => {
+  try {
+    res.cookie("token", null, {
+      expires: new Date(Date.now()),
+    })
+    res.send("User Logged out Successfully");
+  } catch (err) {
+    res.status(400).send("Error " + err.message);
   }
 });
 

@@ -76,3 +76,7 @@ Create a repository
 - explore or read documentation of express router
 - create routes folder for managing auth, profile, request router
 - import these router in app.js
+
+- create POST logout api
+- create PATCH profile/edit
+- reate PATCH profile/password api

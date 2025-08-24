@@ -1,20 +1,35 @@
-const Validator = require('validator');
+const Validator = require("validator");
 
-const ValidateSignUpData = (req)=>{
-    const {firstName , lastName , email  , password} = req.body
-    if (!firstName && !lastName){
-        throw  new Error ("Name is not Valid ")
-    }else if(firstName.length < 4 || firstName.length>50) {
-        throw new Error ("firstname should be 4 - 50 characters")
+const ValidateSignUpData = (req) => {
+  const { firstName, lastName, email, password } = req.body;
+  if (!firstName && !lastName) {
+    throw new Error("Name is not Valid ");
+  } else if (firstName.length < 4 || firstName.length > 50) {
+    throw new Error("firstname should be 4 - 50 characters");
+  } else if (!Validator.isEmail(email)) {
+    throw new Error("Email id is not correct");
+  } else if (!Validator.isStrongPassword(password)) {
+    throw new Error("Password should be strong");
+  }
+};
 
-    }else if(!Validator.isEmail(email)) {
-        throw new Error ("Email id is not correct")
+const validateEditFields = (req) => {
+  const allowedEditsFields = [
+    "firstName",
+    "lastName",
+    "email",
+    "gender",
+    "age",
+    "password",
+    "photoURL",
+  ];
+  const isEditAllowed = Object.keys(req.body).every((field) =>
+    allowedEditsFields.includes(field)
+  );
+  return isEditAllowed;
+};
 
-    }else if(!Validator.isStrongPassword(password)){
-        throw new Error("Password should be strong")
-    }
-
-}
 module.exports = {
-    ValidateSignUpData
-}
+  ValidateSignUpData,
+  validateEditFields,
+};

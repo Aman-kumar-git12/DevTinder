@@ -8,8 +8,11 @@ const userAuth = async (req, res, next) => {
     if (!token) throw new Error("Token is not valid");
 
     // Verify token & extract user ID
-    const decodedObj = await jwt.verify(token, "DEV@tinder$790", );
+    const decodedObj = await jwt.verify(token, "DEV@tinder$790", {
+      expiresIn: "7d",
+    });
     const { _id } = decodedObj;
+
 
     // Find user in DB
     const user = await User.findById(_id);
@@ -22,7 +25,6 @@ const userAuth = async (req, res, next) => {
     res.status(401).send("Error: " + err.message);
   }
 };
-
 
 module.exports = {
   userAuth,
