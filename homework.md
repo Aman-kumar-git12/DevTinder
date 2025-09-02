@@ -80,3 +80,14 @@ Create a repository
 - create POST logout api
 - create PATCH profile/edit
 - reate PATCH profile/password api
+
+- Create connection request schema
+- send connnection reques api
+- proper validation of data
+- think about all corner cases
+- $or query $and Query 
+- schema.pre function
+- Read more about indexes in monogoDB
+- why do we need indexes
+- what is  advantages and disadvantages of creating
+- ALWAYS THINK ABOUT CORNER CASES TO ESCAPE FROM ATTACKER

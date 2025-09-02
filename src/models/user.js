@@ -5,10 +5,11 @@ const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema(
   {
     firstName: {
-      type: String, // the type of the field is string
-      required: true, //this field is required
-      minlength: 4, //this field must be atleast 4 characters long
-      // maxlength: 5, //this field must be atmost 5 characters long
+      type: String,
+      required: true,
+      minlength: 4,
+      maxlength: 50,
+      index: true,
     },
     lastName: {
       type: String,
@@ -17,8 +18,8 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true, // this field must be unique, no two users can have the same email
-      trim: true, //this removes any whitespaces from beginnning and the end of the string
+      unique: true,
+      trim: true,
       validate(value) {
         if (!validator.isEmail(value)) {
           throw new Error("Invalid Email address");
@@ -32,7 +33,7 @@ const userSchema = new mongoose.Schema(
       enum: {
         // worked as validate function
         values: ["male", "female", "others"],
-        required:true
+        required: true,
       },
 
       // validate(value) {
@@ -45,15 +46,15 @@ const userSchema = new mongoose.Schema(
     },
     age: {
       type: Number,
-      min: 18, //this field must be atleast 18 years old
-      max: 60, //this field must be atmost 60 years old
+      min: 18,
+      max: 60,
     },
     password: {
       type: String,
     },
     photoURL: {
       type: String,
-      default: "https://example.com/default-profile.png", // default value of photo url
+      default: "https://example.com/default-profile.png",
     },
   },
   {
@@ -61,6 +62,9 @@ const userSchema = new mongoose.Schema(
     // versionKey: false, // versionKey: false will remove the __v field from the document only when we create the document
   }
 );
+
+//compound index
+userSchema.index({ firstName: 1, lastName: 1 });
 
 userSchema.methods.getJWT = async function () {
   const user = this;
