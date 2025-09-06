@@ -93,3 +93,6 @@ Create a repository
 - ALWAYS THINK ABOUT CORNER CASES TO ESCAPE FROM ATTACKER
 
 - write code with proper validation for post "/request/review/:status/:requestId"
+
+- Read about ref and populate 
+- Create GET /user/requests/received with all the checks

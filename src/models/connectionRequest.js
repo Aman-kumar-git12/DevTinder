@@ -3,6 +3,7 @@ const connectionRequestSchema = new mongoose.Schema(
   {
     fromUserId: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User", //referance to the user collection
       required: true,
     },
     toUserId: {
@@ -22,7 +23,6 @@ const connectionRequestSchema = new mongoose.Schema(
   }
 );
 
-
 //compound index
 connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 });
 
@@ -36,9 +36,9 @@ connectionRequestSchema.pre("save", function (next) {
   next();
 });
 
-const connectionRequestModel  = new mongoose.model(
-    'ConnectionRequest', 
-    connectionRequestSchema
-)
+const connectionRequestModel = new mongoose.model(
+  "ConnectionRequest",
+  connectionRequestSchema
+);
 // Mongoose automatically converts it to a collection name in lowercase and plural form: connectionrequests
-module.exports = connectionRequestModel
+module.exports = connectionRequestModel;
