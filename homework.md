@@ -96,3 +96,4 @@ Create a repository
 
 - Read about ref and populate 
 - Create GET /user/requests/received with all the checks
+- create get api user/connections
